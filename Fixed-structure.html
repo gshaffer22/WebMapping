@@ -1,0 +1,148 @@
+<!DOCTYPE html>
+<html>
+
+  <head>
+    <meta charset='utf-8' />
+    <title>'Forest Park Trailheads'</title>
+    <meta name='viewport' content='initial-scale=1,maximum-scale=1,user-scalable=no' />
+    <!--    1.1.  Include the reference to the Mapbox JavaScript here in the <head> of the page  -->
+      
+         <script src='https://api.tiles.mapbox.com/mapbox-gl-js/v3.2.0/mapbox-gl.js'></script>
+
+      
+    <!--    1.2 Include the reference to the Mapbox CSS here in the <head> of the page  -->
+              <link href='https://api.tiles.mapbox.com/mapbox-gl-js/v3.2.0/mapbox-gl.css' rel='stylesheet' />
+
+  
+    <style>
+        /* 1.4 Insert the CSS code here between the <style> tags */      
+        
+        body { margin:50px; padding:0; }
+           #map1 { position:relative; height:300px; width:100%;}
+
+        /* 2.5.2 Insert additional CSS code here between the <style> tags */
+            #map2 { position:relative; height:300px; width:100%;}
+        
+            #map3 { position:relative; height:300px; width:100%;}
+        
+
+
+    </style>
+ 
+    <head>
+     		<h1>Forest Park Trailheads</h1>
+            <body> Below are three maps that show the Hoyt Arboretum, Wildwood Trail, and Leif Erikson access points in Forest Park, Portland, Oregon. These are all great trails and areas to explore in the Forest Park area for individuals who are new to the area or wish to get outdoors more. </body>
+            <div id='title'>
+            
+  <body>
+        <!-- 1.3 Insert the div for the structure of the page here in the <body> of the page -->
+      <h1> Hoyt Arboretum: </h1>
+        <body> The Hoyt Arboretum is well-known for the wide varieties of trees and trails throughout the area. There are many trails the intersect this area, including Wildwood Trail. The Zoo, Japanese Gardens, and many other gardens are within short reach of this area as well, making it a good starting point for anyone looking to get outside in Portland. </body>
+         <div id='map1'></div>
+    
+   <hr>
+     <h1> Wildwood Trail:</h1>
+      <body> Wildwood Trail is over 30 miles long and touches many other trails in Forest Park. It is a great place to start for someone who wants to get to know different areas of Forest Park better. The trail does have some inclines (and declines), making it a great trail for hikers of all levels. </body>
+     <div id='map2'></div>
+<hr>
+      <h1> Leif Erikson Trail: </h1>
+      <body> Leif Erikson Trail is over 10 miles long and is one of the few trails in Forest Park that is bike (and horse!) friendly. Many other trails branch off of Leif Erikson as well, making this another great trail for beginners who are new to hiking or individuals who want to explore Forest Park. </body>
+     <div id='map3'></div>
+      
+        <script>
+            /* Insert the JavaScript within the <script> tags, within the body */
+            // 2.1 Start with the Mapbox access token
+ mapboxgl.accessToken = 'pk.eyJ1IjoiZ3NoYWZmZXIiLCJhIjoiY205MXUwZmplMDRydjJqb2VoNnJ3ZnhzZiJ9.l1lYei0XGS6mLrco5IQpbg'
+            // 2.2 Then initialize the first map
+
+   var map = new mapboxgl.Map({
+       container: 'map1', // id of a div on your page, where the map will be inserted
+       style: 'mapbox://styles/mapbox/outdoors-v12', // the style URL 'mapbox://styles/mapbox/outdoors-v12' 
+       center: [-122.7150219044043, 45.51643799758642], // starting position [lng, lat] eg. [-122.6788, 45.5212]
+       zoom: 11 // starting zoom 
+   });
+
+            // 2.3 Add any other variables (such as popups and markers) to the first map
+      var popup = new mapboxgl.Popup()
+                      .setText('Hoyt Arboretum, Forest Park');
+
+                  var marker = new mapboxgl.Marker({color:'green'})
+                    .setLngLat([-122.7150219044043, 45.51643799758642]) // starting position [lng, lat]
+                    .setPopup(popup) //add the popup named "popup" to this marker 
+		    .addTo(map); // add it to the map with the ID "map"
+
+            // 2.4 Add arguments to disable the map interactivity here
+            // Disable drag and zoom handlers.
+                map.dragPan.disable();
+               map.scrollZoom.disable();
+               map.boxZoom.disable();
+               map.dragRotate.disable();
+               map.keyboard.disable();
+               map.doubleClickZoom.disable();
+               map.touchZoomRotate.disable();
+               map.touchZoomRotate.disableRotation();
+
+            // 2.5.3 Then initialize the 2nd map
+ // Then initialize the 2nd map
+         var map2 = new mapboxgl.Map({
+         container: 'map2', // id of a div on your page, where the map will be inserted
+         style: 'mapbox://styles/mapbox/outdoors-v12', // stylesheet location
+         center: [-122.73689612737596, 45.54043659875587], // starting position [lng, lat] eg. [-122.6788, 45.5212]
+         zoom: 11 // starting zoom 
+         });
+
+            // 2.5.4 Add any other variables (such as markers) to the second map
+        var popup2 = new mapboxgl.Popup()
+         .setText('Wildwood Trailhead, Forest Park.');
+
+         var marker2 = new mapboxgl.Marker({color:'green'})
+           .setLngLat([-122.73689612737596, 45.54043659875587]) // starting position [lng, lat] 
+           .setPopup(popup2) //add the popup to the marker 
+           .addTo(map2); // id it to the map with the ID *map2*
+
+            // 2.5.5 Add arguments to disable the second map's interactivity here
+                 map2.dragPan.disable();
+         map2.scrollZoom.disable();
+         map2.boxZoom.disable();
+         map2.dragRotate.disable();
+         map2.keyboard.disable();
+         map2.doubleClickZoom.disable();
+         map2.touchZoomRotate.disable();
+         map2.touchZoomRotate.disableRotation();
+            // 2.6 Change the map pointers
+            map.getCanvas().style.cursor = 'default';
+	map2.getCanvas().style.cursor = 'default';
+            
+            
+     // Then initialize the 3rd map
+            var map3 = new mapboxgl.Map({
+         container: 'map3', // id of a div on your page, where the map will be inserted
+         style: 'mapbox://styles/mapbox/outdoors-v12', // stylesheet location
+         center: [-122.72539315092772, 45.53921997797862], // starting position [lng, lat] eg. [-122.6788, 45.5212]      
+         zoom: 11 // starting zoom 
+         });
+            
+    // markers 
+            var popup3 = new mapboxgl.Popup()
+         .setText('Leif Erikson Trailhead, Forest Park.');
+
+         var marker3 = new mapboxgl.Marker({color:'green'})
+           .setLngLat([-122.72539315092772, 45.53921997797862]) // starting position [lng, lat] 
+           .setPopup(popup3) //add the popup to the marker 
+           .addTo(map3); // id it to the map with the ID *map3*
+            
+    // disable interactivity 
+              map3.dragPan.disable();
+         map3.scrollZoom.disable();
+         map3.boxZoom.disable();
+         map3.dragRotate.disable();
+         map3.keyboard.disable();
+         map3.doubleClickZoom.disable();
+         map3.touchZoomRotate.disable();
+         map3.touchZoomRotate.disableRotation();
+      
+    // change map pointer
+            map3.getCanvas().style.cursor = 'default';
+        </script>
+  </body>
+</html>
