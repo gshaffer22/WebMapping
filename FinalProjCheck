@@ -1,0 +1,463 @@
+<!DOCTYPE html>
+<html lang=eng>
+<head>
+    <meta charset="utf-8">
+    <title>Filter symbols by toggling a list</title>
+    <meta name="viewport" content="initial-scale=1,maximum-scale=1,user-scalable=no">
+    <link href="https://api.mapbox.com/mapbox-gl-js/v2.11.0/mapbox-gl.css" rel="stylesheet">
+    <script src="https://api.mapbox.com/mapbox-gl-js/v2.11.0/mapbox-gl.js"></script>
+    <style>
+        html, body {
+            height: 100%;
+            margin: 0;
+            padding: 0;
+            }
+        #map {
+            position: absolute;
+            top: 0;
+            bottom: 0;
+            width: 100%;
+            }
+    </style>
+    </head>
+
+<body>
+<div id="map"></div>
+<!-- add filter group nav here  ( II.6) -->
+<nav id="filter-group" class="filter-group"></nav>
+
+<script>
+	mapboxgl.accessToken = 'pk.eyJ1Ijoiam9tZXJzb24iLCJhIjoiY2o1bXE2bHlyMnJhZDMzbnpyMnhlODdpcSJ9.QJMJ_cTFCY050aZfSn1umQ';
+    
+    // ADD THE DATA HERE (II.2)
+    // This GeoJSON contains features that include an "icon"
+    // property. The value of the "icon" property corresponds
+    // to an image in the Mapbox Light style's sprite. (Note:
+    // the name of images is the value of the "icon" property
+    // + "-15".)
+     var places = {
+          "type": "FeatureCollection",
+          "features": [
+            {
+              "type": "Feature",
+              "properties": {
+                "Mound Name": "Leum Peut's Mound ",
+                "name": "Trench 1", 
+              },
+              "geometry": {
+                "type": "Point",
+                "coordinates": [
+                  103.308464,
+                  13.115908
+                ]
+              },
+              "id": 1
+            },
+            {
+              "type": "Feature",
+              "properties": {
+                "Mound Name": "Leum Peut's Mound ",
+                "name": "Trench 2"
+              },
+              "geometry": {
+                "type": "Point",
+                "coordinates": [
+                  103.308427,
+                  13.115908
+                ]
+              },
+              "id": 2
+            },
+            {
+              "type": "Feature",
+              "properties": {
+                "Mound Name": "Ta Meas' Mound",
+                "name": "Trench 4"
+              },
+              "geometry": {
+                "type": "Point",
+                "coordinates": [
+                  103.304977,
+                  13.114755
+                ]
+              },
+              "id": 4
+            },
+            {
+              "type": "Feature",
+              "properties": {
+                "Mound Name": "Ta Meas' Mound",
+                "name": "Trench 6"
+              },
+              "geometry": {
+                "type": "Point",
+                "coordinates": [
+                  103.304988,
+                  13.114421
+                ]
+              },
+              "id": 6
+            },
+            {
+              "type": "Feature",
+              "properties": {
+                "Mound Name": "Ta Rem's Mound",
+                "name": "Trench 7"
+              },
+              "geometry": {
+                "type": "Point",
+                "coordinates": [
+                  103.303659,
+                  13.11594
+                ]
+              },
+              "id": 7
+            },
+            {
+              "type": "Feature",
+              "properties": {
+                "Mound Name": "Ta Rem's Mound",
+                "name": "Trench 8"
+              },
+              "geometry": {
+                "type": "Point",
+                "coordinates": [
+                  103.303659,
+                  13.115967
+                ]
+              },
+              "id": 8
+            },
+            {
+              "type": "Feature",
+              "properties": {
+                "Mound Name": "Ta Rem's Mound",
+                "name": "Trench 9 & 11"
+              },
+              "geometry": {
+                "type": "Point",
+                "coordinates": [
+                  103.303659,
+                  13.115904
+                ]
+              },
+              "id": 9
+            },
+            {
+              "type": "Feature",
+              "properties": {
+                "Mound Name": "Ta Rem's Mound",
+                "name": "Trench 10"
+              },
+              "geometry": {
+                "type": "Point",
+                "coordinates": [
+                  103.304998,
+                  13.114421
+                ]
+              },
+              "id": 10
+            },
+            {
+              "type": "Feature",
+              "properties": {
+                "Mound Name": "Ta Rem's Mound",
+                "name": "Trench 12"
+              },
+              "geometry": {
+                "type": "Point",
+                "coordinates": [
+                  103.30366,
+                  13.115886
+                ]
+              },
+              "id": 12
+            },
+            {
+              "type": "Feature",
+              "properties": {
+                "Mound Name": "Ta Meas' Mound",
+                "name": "Trench 13"
+              },
+              "geometry": {
+                "type": "Point",
+                "coordinates": [
+                  103.304998,
+                  13.114412
+                ]
+              },
+              "id": 13
+            },
+            {
+              "type": "Feature",
+              "properties": {
+                "Mound Name": "Ta Meas' Mound",
+                "name": "Trench 14"
+              },
+              "geometry": {
+                "type": "Point",
+                "coordinates": [
+                  103.304998,
+                  13.114394
+                ]
+              },
+              "id": 14
+            },
+            {
+              "type": "Feature",
+              "properties": {
+                "Mound Name": "Ta Rem's Mound",
+                "name": "Trench 15"
+              },
+              "geometry": {
+                "type": "Point",
+                "coordinates": [
+                  103.303679,
+                  13.115786
+                ]
+              },
+              "id": 15
+            },
+            {
+              "type": "Feature",
+              "properties": {
+                "Mound Name": "Klee Family Mound (Duck Trench)",
+                "name": "Trench 16 & 17"
+              },
+              "geometry": {
+                "type": "Point",
+                "coordinates": [
+                  103.306667,
+                  13.113058
+                ]
+              },
+              "id": 16
+            },
+            {
+              "type": "Feature",
+              "properties": {
+                "Mound Name": "Banana Garden Mound",
+                "name": "Trench 18 & 19"
+              },
+              "geometry": {
+                "type": "Point",
+                "coordinates": [
+                  103.303237,
+                  13.114319
+                ]
+              },
+              "id": 18
+            },
+            {
+              "type": "Feature",
+              "properties": {
+                "Mound Name": "Kosal's Mound",
+                "name": "Trench 20 & 21"
+              },
+              "geometry": {
+                "type": "Point",
+                "coordinates": [
+                  103.310147,
+                  13.117944
+                ]
+              },
+              "id": 20
+            },
+            {
+              "type": "Feature",
+              "properties": {
+                "Mound Name": "Cow Figurine Mound",
+                "name": "Trench 22"
+              },
+              "geometry": {
+                "type": "Point",
+                "coordinates": [
+                  103.306388,
+                  13.114719
+                ]
+              },
+              "id": 22
+            },
+            {
+              "type": "Feature",
+              "properties": {
+                "Mound Name": "Vireak's Mound (Cham Mound) ",
+                "name": "Trench 23"
+              },
+              "geometry": {
+                "type": "Point",
+                "coordinates": [
+                  103.29878,
+                  13.12134
+                ]
+              },
+              "id": 23
+            },
+            {
+              "type": "Feature",
+              "properties": {
+                "Mound Name": "Keum's Mound (Daem Kvet Mound) ",
+                "name": "Trench 24"
+              },
+              "geometry": {
+                "type": "Point",
+                "coordinates": [
+                  103.301457,
+                  13.12106
+                ]
+              },
+              "id": 24
+            },
+            {
+              "type": "Feature",
+              "properties": {
+                "Mound Name": "Rath's Mound (Near Beoung Chan Tao) ",
+                "name": "Trench 25"
+              },
+              "geometry": {
+                "type": "Point",
+                "coordinates": [
+                  103.304432,
+                  13.120211
+                ]
+              },
+              "id": 18
+            },
+            {
+              "type": "Feature",
+              "properties": {
+                "Mound Name": "Ren Kannya's Mound",
+                "name": "Trench 26"
+              },
+              "geometry": {
+                "type": "Point",
+                "coordinates": [
+                  103.305642,
+                  13.122732
+                ]
+              },
+              "id": 26
+            },
+            {
+              "type": "Feature",
+              "properties": {
+                "Mound Name": "Kosal's Mound ",
+                "name": "Trench 27"
+              },
+              "geometry": {
+                "type": "Point",
+                "coordinates": [
+                  103.310147,
+                  13.117944
+                ]
+              },
+              "id": 27
+            },
+            {
+              "type": "Feature",
+              "properties": {
+                "Mound Name": "Rath's Mound 2",
+                "name": "Trench 28"
+              },
+              "geometry": {
+                "type": "Point",
+                "coordinates": [
+                  103.304036,
+                  13.120227
+                ]
+              },
+              "id": 28
+            }
+          ]
+        }         
+     
+     // Set bounds to area of reserach (Prasat Baset) 
+		var bounds = [
+		    [103.30094845658827, 13.11243171191833], // Southwest coordinates, 
+		    [103.31853529478916, 13.1266183728731] // Northeast coordinates  
+		];
+
+		var map = new mapboxgl.Map({
+			container: 'map',
+			style: 'mapbox://styles/mapbox/light-v10',
+			center: [103.30833340594079, 13.11759733306607],   
+			zoom: 11.15,
+			minZoom: 10, // pick your own
+			maxBounds: bounds // Sets bounds from variable above
+		});
+    // Map's On 'load' function.
+    map.on('load', function () {
+      var filterGroup = document.getElementById('filter-group');
+
+      map.addSource('places', {
+        type: 'geojson',
+        data: places
+      });
+
+    // add a new layer using the points
+    const layerID = 'all-places';
+        
+    map.addLayer({
+        id: layerID,
+        type: 'symbol',
+        source: 'places',
+        layout: {
+            'icon-image': 'marker-15', // Uses built-in icon
+            'icon-allow-overlap': true
+        }
+    });
+
+    // Add a layer for this symbol type if there is not a layer with this name already.
+        
+        // Add checkbox and label elements for the layer.
+                var input = document.createElement('input');
+                input.type = 'checkbox';
+                input.id = layerID;
+                input.checked = true;
+                filterGroup.appendChild(input);
+
+                var label = document.createElement('label');
+                label.setAttribute('for', layerID);
+               label.textContent = "Toggle Trench Points";
+                filterGroup.appendChild(label);
+
+       // When the checkbox changes, update the visibility of the layer.
+        input.addEventListener('change', function (e) {
+        map.setLayoutProperty(
+        layerID,
+        'visibility',
+        e.target.checked ? 'visible' : 'none'              
+        );
+    });
+             
+        // Add popup code here (III.2)
+        // When a click event occurs on a feature in the places layer, 
+        // open a popup at the location of the feature, with description HTML from its 
+        // properties.
+        map.on('click', layerID, function (e) {
+            var coordinates = e.features[0].geometry.coordinates.slice();
+            var description = "This is a unique Portland spot! <br> Name: "  + e.features[0].properties.name + "<br> Mound Name: "  + e.features[0].properties["Mound Name"]
+ 
+            new mapboxgl.Popup()
+            .setLngLat(coordinates)
+            .setHTML(description) // the string in the description var is added to the popup here
+            .addTo(map);
+        });
+
+               // Add mouseover code here (V.1)
+      // Change the cursor to a pointer when the mouse is over the places layer.
+      map.on('mouseenter', layerID, function () {
+           map.getCanvas().style.cursor = 'pointer';
+      });
+
+      // Change it back to a pointer when it leaves.
+      map.on('mouseleave', layerID, function () {
+             map.getCanvas().style.cursor = '';
+      });
+             }
+        });
+
+</script>
+
+</body>
+</html>
