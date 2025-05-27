@@ -1,3 +1,4 @@
+
 <!DOCTYPE html>
 <html lang="en">
 <head>
@@ -19,7 +20,7 @@
             width: 100%;
             }
         .filter-group {
-        font: 17px/20px 'Courier New', Lucida Console, monospace; 
+        font: 17px/20px 'Lucida Console',Courier New, monospace; 
         font-weight: 600;
         position: absolute;
         top: 10px;
@@ -52,7 +53,7 @@
     }
     /* code for when the box is unchecked, color is lighter */
     .filter-group input[type='checkbox'] + label {
-        background-color: rgba(99, 150, 122, 0.7);
+        background-color: rgba(99, 150, 122, 0.2);
         text-transform: capitalize;
     }
     /* cpde for when the box is checked, color is darker */ 
@@ -65,16 +66,22 @@
         content: '✔';
         margin-right: 5px;
     }
+      
+      .checkboximage {
+        width: 75%;
+        height: 75%;
+        object-fit: contain;
+        align-content: left;
+        margin-left: 4px; /* optional spacing */
+      }
 
-        
     </style>
-    </head>
+  </head>
 
 <body>
 <div id="map"></div>
 <!-- add filter group nav here  ( II.6) -->
 <nav id="filter-group" class="filter-group"></nav>
-
 <script>
 	mapboxgl.accessToken = 'pk.eyJ1Ijoiam9tZXJzb24iLCJhIjoiY2o1bXE2bHlyMnJhZDMzbnpyMnhlODdpcSJ9.QJMJ_cTFCY050aZfSn1umQ';
     
@@ -87,7 +94,7 @@
               "properties": {
                 "Mound Name": "Ta Rem's Mound",
                 "name": "Trench 8",
-                "Class": [1,4,5]
+                "CerClass": [1,4,5]
               },
               "geometry": {
                 "type": "Point",
@@ -103,7 +110,7 @@
               "properties": {
                 "Mound Name": "Ta Rem's Mound",
                 "name": "Trench 12",
-                "Class": [4,5]
+                "CerClass": [4,5]
               },
               "geometry": {
                 "type": "Point",
@@ -119,7 +126,7 @@
               "properties": {
                 "Mound Name": "Klee Family Mound (Duck Trench)",
                 "name": "Trench 16 & 17",
-                "Class": [1,4,5]
+                "CerClass": [1,4,5]
               },
               "geometry": {
                 "type": "Point",
@@ -151,7 +158,7 @@
               "properties": {
                 "Mound Name": "Kosal's Mound",
                 "name": "Trench 20 & 21", 
-                "Class": [1,2,4,5]
+                "CerClass": [1,2,4,5]
               },
               "geometry": {
                 "type": "Point",
@@ -167,7 +174,7 @@
               "properties": {
                 "Mound Name": "Cow Figurine Mound",
                 "name": "Trench 22", 
-                "Class": [1,4,6]
+                "CerClass": [1,4,6]
               },
               "geometry": {
                 "type": "Point",
@@ -183,7 +190,7 @@
               "properties": {
                 "Mound Name": "Vireak's Mound (Cham Mound) ",
                 "name": "Trench 23",
-                "Class": [1,3,4,5,6]
+                "CerClass": [1,3,4,5,6]
               },
               "geometry": {
                 "type": "Point",
@@ -199,7 +206,7 @@
               "properties": {
                 "Mound Name": "Keum's Mound (Daem Kvet Mound) ",
                 "name": "Trench 24",
-                "Class": [4,5]
+                "CerClass": [4,5]
               },
               "geometry": {
                 "type": "Point",
@@ -231,7 +238,7 @@
               "properties": {
                 "Mound Name": "Rath's Mound 2",
                 "name": "Trench 28", 
-                "Class": [1,5]
+                "CerClass": [1,5]
               },
               "geometry": {
                 "type": "Point",
@@ -268,11 +275,16 @@
         data: places
       });
       
-    // Create one layer per Trench
-      const uniqueTrenches = [...new Set(places.features.map(f => f.properties.name.trim()))];
+    // Create one layer per class (so I can filter by class later)
+      const classSet = new Set();
+      places.features.forEach(f => {
+        const cerClasses = f.properties.CerClass || f.properties.Class || [];
+        cerClasses.forEach(c => classSet.add(c));
+      });
+      const uniqueClass = [...classSet].sort((a, b) => a - b);
 
-      uniqueTrenches.forEach((trenchName, index) => {
-          const layerID = `trench-${index}`; // avoids spaces in ID
+      uniqueClass.forEach((CerClass, index) => {
+          const layerID = `CerClass-${index}`; // avoids spaces in ID
        
     // Add a layer for this symbol type if there is not a layer with this name already.
         if (!map.getLayer(layerID)) {
@@ -285,23 +297,60 @@
              'icon-allow-overlap': true
              },
              // filter the dataset for all features that have the `icon` value that is the same and the current `symbol` value. 
-            'filter': ['==', ['get', 'name'], trenchName]
+            filter: ['in', CerClass, ['get', 'CerClass']] 
 
          });
-
+        // making class names with buttons and images
+          const classNames = {
+            1: {
+              text: "Class 1: Restricted",
+              img: "Class1.png"
+            },
+            2: {
+              text: "Class 2: Unrestricted",
+              img: "Class2.png"
+            },
+            3: {
+              text: "Class 3: Simple",
+              img: "Class3.png"
+            },
+            4: {
+              text: "Class 4: Restricted Everted Carinated",
+              img: "Class4.png"
+            },
+            5: {
+              text: "Class 5: Everted with Lip",
+              img: "Class5.png"
+            },
+            6: {
+              text: "Class 6: Concave",
+              img: "Class6.png"
+            }
+          };
         // Add checkbox and label elements for the layer.
-                var input = document.createElement('input');
-                input.type = 'checkbox';
-                input.id = layerID;
-                input.checked = true;
-                filterGroup.appendChild(input);
+            var info = classNames[CerClass]
 
-                var label = document.createElement('label');
-                label.setAttribute('for', layerID);
-               label.textContent = trenchName;
-                filterGroup.appendChild(label);
-            
-            
+              var input = document.createElement('input');
+              input.type = 'checkbox';
+              input.id = layerID;
+              input.checked = true;
+              filterGroup.appendChild(input);
+
+              var label = document.createElement('label');
+              label.setAttribute('for', layerID);
+              label.textContent = info?.text || `Class ${CerClass}`;
+              filterGroup.appendChild(label);
+             
+              // adding images to the buttons 
+              if (info.img) {
+                const img = document.createElement('img');
+                img.src = info.img;
+                img.alt = `Image for ${info.text}`;
+                img.className = 'checkboximage'; // class for changing the style of the images in CSS 
+                filterGroup.appendChild(img);
+                label.appendChild(img);     // ✅ ADDED
+              }
+
 
        // When the checkbox changes, update the visibility of the layer.
         input.addEventListener('change', function (e) {
@@ -321,7 +370,9 @@
             var description = "<b>Name:</b> " 
                 + e.features[0].properties.name 
                 + "<br><b>Mound Name:</b> " 
-                + e.features[0].properties["Mound Name"];
+                + e.features[0].properties["Mound Name"]
+                + "<br><b> Classes Present:</b> "
+                + e.features[0].properties["CerClass"];
 
 
             new mapboxgl.Popup()
