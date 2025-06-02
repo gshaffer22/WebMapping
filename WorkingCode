@@ -144,6 +144,7 @@
         z-index: 2;
         font-family: "Roboto", sans-serif;
         font-size: 25px;
+        cursor: pointer;
       }
     </style>
   </head>
@@ -164,7 +165,7 @@
   <p id="Backgroundtxt" class = "bodytxt">The Angkor Empire lasted from approximately 802-1431 CE, and left temples, ceramics, and inscriptions that are being studied today. Earthenware have not been as well-studied compared to their stoneware counterparts in the Angkor Empire but have much to tell us. Earthenwares were likely used as everyday vessels, such as cookware or storage containers (Stock, 1981). Earthenware ceramics were most likely made in local settings (often in bonfire pits), while stonewares were high-fired in kiln sites which have traceable origins in some instances. Earthenware ceramics do not typically have a glaze and are made of various fabrics with different decorations (e.g., combed, incised, cord-marked, painted). This study was conducted on ceramics from Prasat Baset, a temple site, from excavations in 2018-2023. The site has occupation periods from before, during, and after the Angkor Empire with extensive collections of earthenware ceramics from each period.</p>
   <button id="Methodology" class="sidebar_buttons">Methodology</button>
   <p id="Methodologytxt" class = "bodytxt">In Cambodia, we used a sorting typology developed by Dr. Carmen Sarjeant and sorted based on visual analysis of temper, decoration, and characteristics. Rims are a good basis for understanding pot forms, as they are a diagnostic and measurable feature. Rims indicate a form of choice by the maker and allows us to find patterns in processes. I selected the most complete rims and measured the thickness and length of the rim, the diameter, and body thickness. </p>
-  <button id="T:ypology" class="sidebar_buttons">Typology</button>
+  <button id="Typology" class="sidebar_buttons">Typology</button>
   <p id="Typologytxt" class = "bodytxt">Visual analysis was completed in Oregon, through drawings by Ranet Hong. There were 173 rims from 13 trenches included in the typology. Combining these images and terminology from Dr. Anna Shepard’s work resulted in the preliminary typology as follows: 
   <br>(1) Everted Restricted 
   <br>(2) Everted Restricted Short Rim 
