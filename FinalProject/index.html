@@ -1,0 +1,647 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="utf-8">
+    <title>Understanding Earthenware Ceramics in Cambodia</title>
+    <meta name="viewport" content="initial-scale=1,maximum-scale=1,user-scalable=no">
+    <link href="https://api.mapbox.com/mapbox-gl-js/v2.11.0/mapbox-gl.css" rel="stylesheet">
+    <script src="https://api.mapbox.com/mapbox-gl-js/v2.11.0/mapbox-gl.js"></script>
+  <!-- link to Google Font -->
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=IBM+Plex+Serif:ital,wght@0,100;0,200;0,300;0,400;0,500;0,600;0,700;1,100;1,200;1,300;1,400;1,500;1,600;1,700&family=Roboto:ital,wght@0,100..900;1,100..900&display=swap" rel="stylesheet">    <style>
+<style>
+        html, body {
+            height: 100%;
+            margin: 0;
+            padding: 0;
+            }
+        #map {
+            position: absolute;
+            top: 0;
+            bottom: 0;
+            width: 100%;
+            }
+        .filter-group {
+        font-family: "IBM Plex Serif", serif;
+        font-size: 15px;
+        position: absolute;
+        top: 15px;
+        right: 10px;
+        z-index: 1;
+        width: 120px;
+        color: black;
+        width: 200px;
+        margin: 0;
+    }
+            
+    .filter-group input[type='checkbox'] {
+        display: none;
+    }
+    .filter-group input[type='checkbox'] + label {
+        display: flex;                     /* flex layout */
+        align-items: center;               /* vertical  */
+        justify-content: flex-start;       /* content in box is left */
+        gap: 8px;                          /* spacing between image and text */
+        border-radius: 3px 3px 0 0;
+        display: block;
+        cursor: pointer;
+        padding: 10px;
+        border-bottom: 1px solid rgba(0, 0, 0, 0.25);
+
+    }
+    /* code for when the box is unchecked, color is lighter */
+    .filter-group input[type='checkbox'] + label {
+        background-color: rgba(255, 255, 255, 0.5);
+        text-transform: capitalize;
+    }
+    /* code for when the box is checked, color is darker */ 
+    .filter-group input[type='checkbox'] + label:hover,
+    .filter-group input[type='checkbox']:checked + label {
+        background-color: rgba(255, 255, 255, 0.8);
+    }
+    .filter-group input[type='checkbox']:checked + label:before {
+        content: '✔';
+        margin-right: 5px;
+    }
+    /* image formatting for the images in the check boxes */ 
+    .checkboximage {
+      width: 75%;
+      height: 75%;
+      object-fit: contain;
+      align-content: left;
+      margin-left: 4px; /* optional spacing */
+      flex-shrink: 0; /* image won't shrink with the flex of the checkboxes */
+    }
+    /* image formatting for the image in the temple popup box */ 
+    .templeImage{
+      width: 100%;
+      height: 100%
+    }
+    .sidebar {
+      display: none;  /* hiding the sidebar by default in order to set up a button */  
+      display: none;  /* hiding the sidebar by default in order to set up a button */  
+      position: absolute;        
+      z-index: 2;
+      top: 15px;
+      left: 10px;
+      padding: 1rem;
+      background-color: white;
+      font-family: "IBM Plex Serif", serif;
+      width: fit-content;
+      max-width: 300px;
+      max-height: 80%;
+      overflow-y: auto;
+      border-radius: 2px;
+    }
+    .content-close-button {
+      position: absolute;
+      top: 8px;
+      right: 10px;
+      background: none;
+      border: none;
+      font-size: 24px;
+      color: #000;
+      cursor: pointer;
+    }
+    .sidebar_buttons {
+      display: flex;                     /* flex layout */
+      align-items: center;               /* vertical  */
+      justify-content: flex-start;       /* content in box is left */
+      position: relative;
+      cursor: pointer;       
+      padding: 0.25em;
+      background: none;
+      border: none;
+      outline: none;
+      cursor: pointer;  
+      font-family: "IBM Plex Serif", serif;
+      font-size: 20px;
+    }
+    .header {
+      position: relative;
+      font-family: "IBM Plex Serif", serif;        
+      font-size: 25px;
+      padding: none;
+      margin: 0;        
+      padding: 0.25em;
+    }
+    .PopupText {
+      font-family: "IBM Plex Serif", serif;
+      font-size: 15px;
+      line-height: 1.75em;
+    }
+    /* changing the sidebar buttons when a user hovers over it - highlight */
+    .sidebar_buttons:hover {
+      background-color: rgba(49, 143, 41, 0.55); 
+    }
+    .bodytxt {
+      display: none;
+      font-family: "IBM Plex Serif", serif;
+      font-size: 18px;
+      line-height: 0.75cm;
+      padding: 0.25em;
+    }
+    .openbutton {
+      position: absolute;
+      top: 15px;
+      left: 20px;
+      font-family: "IBM Plex Serif", serif;
+      font-size: 30px;
+      cursor: pointer;
+      background-color: rgba(255, 255, 255, 0.8);
+      margin: 0;
+      border: none;
+    }
+    .infotitle {
+      position: absolute; 
+      top: 15px;
+      left: 50%;
+      transform: translateX(-50%);
+      font-family: "IBM Plex Serif", serif;
+      font-size: 30px;
+      color: black;
+      background-color: rgba(255, 255, 255, 0.8);
+      margin: 0;
+      cursor: default;
+    }
+</style>
+</head>
+
+<body>
+<div id="map"></div>
+<!-- add filter group nav here   -->
+<nav id="filter-group" class="filter-group"></nav>
+<!-- button for the About the Project, will be modified with CSS -->
+<div class=info>
+  <p class=infotitle>Ceramic Typology at Prasat Baset, in NW Cambodia</p>
+  <button id="toggle-sidebar" class="openbutton">About the Project</button>
+</div>
+<!-- div for info box on side, with buttons and long text that will appear and disappear on click --> 
+<div id="sidebar" class="sidebar">
+  <h2 class=header>Content</h2>
+  <button id="close-sidebar" class="content-close-button" aria-label="Close sidebar">×</button>
+  <button id="location" class="sidebar_buttons">Where are we?</button>
+  <p id="locationtxt" class="bodytxt"><img src="https://upload.wikimedia.org/wikipedia/commons/thumb/c/cb/Cambodia_on_the_globe_%28Cambodia_centered%29.svg/1200px-Cambodia_on_the_globe_%28Cambodia_centered%29.svg.png" alt="Cambodia on the globe" width="100%">
+  <br> Cambodia on the globe, <a href="https://en.wikipedia.org/wiki/Cambodia">image from Wikipedia</a>.
+  <br> <img src="https://upload.wikimedia.org/wikipedia/commons/thumb/a/ad/Cambodia_Regions_Map.png/1920px-Cambodia_Regions_Map.png" alt="Battambang in map of Cambodia, NW Cambodia" width="100%">
+  <br> Battambang is a city in NW Cambodia. Prasat Baset is located approximately 11km NE of Battambang. <a href="https://en.wikipedia.org/wiki/Cambodia">Image from Wikipedia</a>
+  </p>
+  <button id="Aims" class="sidebar_buttons">Research Aims</button>
+  <p id="Aimstxt" class = "bodytxt">(1) Create a preliminary typology for earthenware household ceramics relating to the Pre-Angkor and Angkor periods in Cambodia.
+    <br>(2) How do these ceramics change overtime and what does this indicate about the area and political changes? </p>
+  <button id="Background" class="sidebar_buttons">Background</button>
+  <p id="Backgroundtxt" class = "bodytxt">The Angkor Empire lasted from approximately 802-1431 CE, and left temples, ceramics, and inscriptions that are being studied today. Earthenware have not been as well-studied compared to their stoneware counterparts in the Angkor Empire but have much to tell us. Earthenwares were likely used as everyday vessels, such as cookware or storage containers (Stock, 1981). Earthenware ceramics were most likely made in local settings (often in bonfire pits), while stonewares were high-fired in kiln sites which have traceable origins in some instances. Earthenware ceramics do not typically have a glaze and are made of various fabrics with different decorations (e.g., combed, incised, cord-marked, painted). This study was conducted on ceramics from Prasat Baset, a temple site, from excavations in 2018-2023. The site has occupation periods from before, during, and after the Angkor Empire with extensive collections of earthenware ceramics from each period.</p>
+  <button id="Methodology" class="sidebar_buttons">Methodology</button>
+  <p id="Methodologytxt" class = "bodytxt">In Cambodia, we used a sorting typology developed by Dr. Carmen Sarjeant and sorted based on visual analysis of temper, decoration, and characteristics. Rims are a good basis for understanding pot forms, as they are a diagnostic and measurable feature. Rims indicate a form of choice by the maker and allows us to find patterns in processes. I selected the most complete rims and measured the thickness and length of the rim, the diameter, and body thickness. </p>
+  <button id="Typology" class="sidebar_buttons">Typology</button>
+  <p id="Typologytxt" class = "bodytxt">Visual analysis was completed in Oregon, through drawings by Ranet Hong. There were 173 rims from 13 trenches included in the typology. Combining these images and terminology from Dr. Anna Shepard’s work resulted in the preliminary typology as follows: 
+  <br>(1) Everted Restricted 
+  <br>(2) Everted Restricted Short Rim 
+  <br>(3) Straight Everted Restricted
+  <br>(4) Everted Concave (Unrestricted)
+  <br>(5) Everted Unrestricted Straight
+  <br>(6) Straight Everted
+  <br>(7) Simple Restricted
+  <br>(8) Simple Unrestricted 
+  <br>(9) Everted Restricted Carinated Straight 
+  <br>(10) Short Everted Restricted Carinated 
+  <br>(11) Everted Restricted (Thickened Rim) 
+  <br>(12) Restricted Everted Vertical Lip 
+  <br>(13) Inverted Concave 
+  <br>(14) Restricted Concave Everted </p>
+  <button id="Classbut" class="sidebar_buttons">Creating a Class System</button>
+  <p id="Classbuttxt" class = "bodytxt">I then developed a class system to further understand earthenware ceramics and look for patterns and similarities. The class system was based on similarities in vessel form and characteristic features (e.g., carination, unrestricted). This allowed for further analysis of broader patterns in a temporal space. Future analysis will include spatial distribution of these classes. 
+  <br> Class 1: Restricted <img src="Class1.png" alt="Restricted vessel rim drawing" class = checkboximage>
+  <br> Class 2: Unrestricted <img src="Class2.png" alt="Unrestricted vessel rim drawing" class = checkboximage>
+  <br> Class 3: Simple <img src="Class3.png" alt="Simple vessel rim drawing" class = checkboximage>
+  <br> Class 4: Restricted Everted Carinated <img src="Class4.png" alt="Restricted Everted Carinated vessel rim drawing" class = checkboximage>
+  <br> Class 5: Everted with Lip <img src="Class5.png" alt="Everted with Lip vessel rim drawing" class = checkboximage>
+  <br> Class 6: Concave <img src="Class6.png" alt="Concave vessel rim drawing" class = checkboximage>
+  <br> Rim drawings courtesy of Ranet Hong. 
+  </p>
+  <button id="Conclusion" class="sidebar_buttons">Early Conclusions</button>
+  <p id="Conclusiontxt" class = "bodytxt">This project is ongoing. Current analysis indicates that there is some form of change overtime, as there is a decrease in class representation in each time period. The Late Iron Age (3-5th C. CE) demonstrates the most variation, with every class represented. The Late Angkor period (11-14th C. CE) has the least amount of variation, with only 3 classes represented. Classes 1, 4, and 5 are represented in each time period. One aim of this research project is to understand how the expansion of the Angkor Empire changed this area and pottery is one way to analyze this. The results from this preliminary study will guide research questions for future steps of this project: 
+    <br>(1) Is the expansion of the Angkor Empire reflected through change in ceramic forms? 
+    <br>(2) How do the rim types correlate with fabric temper, if at all? 
+    <br>(3) What are the social and economic implications of these findings in the area over time? 
+</p>
+  <button id="References" class="sidebar_buttons">References</button>
+  <p id="Referencestxt" class = "bodytxt">(1) Carter, A. K., & Stark, M. T. (2024). “Pteah Cambodia Project Project Excavating Ancient Households June-July 2024 Field Season Report.” 
+    <br> (2) Stock, D., & Southeast Asian Ceramic Society. (1981). Khmer ceramics, 9th-14th century. Southeast Asian Ceramic Society.
+</p>
+</div>
+<script>
+	mapboxgl.accessToken = 'pk.eyJ1Ijoiam9tZXJzb24iLCJhIjoiY2o1bXE2bHlyMnJhZDMzbnpyMnhlODdpcSJ9.QJMJ_cTFCY050aZfSn1umQ';
+    
+    // Trench Data with attributes (trench number, name, and classes present)
+     var places = {
+          "type": "FeatureCollection",
+          "features": [
+            {
+              "type": "Feature",
+              "properties": {
+                "Mound Name": "Ta Rem's Mound",
+                "name": "Trench 8",
+                "CerClass": [1, 4, 5], 
+                "Primary Time Period": "Pre-Angkor Period", 
+                "Number of Samples": "4" 
+                  },
+              "geometry": {
+                "type": "Point",
+                "coordinates": [
+                  103.303659,
+                  13.115967
+                ]
+              },
+              "id": 8
+            },
+            {
+              "type": "Feature",
+              "properties": {
+                "Mound Name": "Ta Rem's Mound",
+                "name": "Trench 12",
+                "CerClass": [4, 5],
+                "Primary Time Period": "Late Angkor Period",
+                "Number of Samples": "3"
+              },
+              "geometry": {
+                "type": "Point",
+                "coordinates": [
+                  103.30366,
+                  13.115886
+                ]
+              },
+              "id": 12
+            },
+            {
+              "type": "Feature",
+              "properties": {
+                "Mound Name": "Klee Family Mound (Duck Trench)",
+                "name": "Trench 16 & 17",
+                "CerClass": [1, 4, 5],
+                "Primary Time Period": "Early Angkor Period",
+                "Number of Samples": "8"
+              },
+              "geometry": {
+                "type": "Point",
+                "coordinates": [
+                  103.306667,
+                  13.113058
+                ]
+              },
+              "id": 17
+            },
+            {
+              "type": "Feature",
+              "properties": {
+                "Mound Name": "Banana Garden Mound",
+                "name": "Trench 18 & 19", 
+                "CerClass": [1, 2, 3, 4, 5, 6],
+                "Primary Time Period": "Late Iron Age",
+                "Number of Samples": "81"
+              },
+              "geometry": {
+                "type": "Point",
+                "coordinates": [
+                  103.303237,
+                  13.114319
+                ]
+              },
+              "id": 18
+            },
+            {
+              "type": "Feature",
+              "properties": {
+                "Mound Name": "Kosal's Mound",
+                "name": "Trench 20 & 21", 
+                "CerClass": [1, 2, 4, 5],
+                "Primary Time Period": "Early Angkor Period",
+                "Number of Samples": "32"
+              },
+              "geometry": {
+                "type": "Point",
+                "coordinates": [
+                  103.310147,
+                  13.117944
+                ]
+              },
+              "id": 20
+            },
+            {
+              "type": "Feature",
+              "properties": {
+                "Mound Name": "Cow Figurine Mound",
+                "name": "Trench 22", 
+                "CerClass": [1, 4, 6],
+                "Primary Time Period": "Pre-Angkor Period",
+                "Number of Samples": "4"
+              },
+              "geometry": {
+                "type": "Point",
+                "coordinates": [
+                  103.306388,
+                  13.114719
+                ]
+              },
+              "id": 22
+            },
+            {
+              "type": "Feature",
+              "properties": {
+                "Mound Name": "Vireak's Mound (Cham Mound) ",
+                "name": "Trench 23",
+                "CerClass": [1, 3, 4, 5, 6],
+                "Primary Time Period": "Pre-Angkor Period",
+                "Number of Samples": "26"
+              },
+              "geometry": {
+                "type": "Point",
+                "coordinates": [
+                  103.29878,
+                  13.12134
+                ]
+              },
+              "id": 23
+            },
+            {
+              "type": "Feature",
+              "properties": {
+                "Mound Name": "Keum's Mound (Daem Kvet Mound) ",
+                "name": "Trench 24",
+                "CerClass": [4, 5],
+                "Primary Time Period": "Late Angkor Period",
+                "Number of Samples": "10"
+              },
+              "geometry": {
+                "type": "Point",
+                "coordinates": [
+                  103.301457,
+                  13.12106
+                ]
+              },
+              "id": 24
+            },
+            {
+              "type": "Feature",
+              "properties": {
+                "Mound Name": "Kosal's Mound ",
+                "name": "Trench 27",
+                "CerClass": [1, 4],
+                "Primary Time Period": "Early Angkor Period",
+                "Number of Samples": "4"
+              },
+              "geometry": {
+                "type": "Point",
+                "coordinates": [
+                  103.310147,
+                  13.117944
+                ]
+              },
+              "id": 27
+            },
+            {
+              "type": "Feature",
+              "properties": {
+                "Mound Name": "Rath's Mound 2",
+                "name": "Trench 28", 
+                "CerClass": [1, 5],
+                "Primary Time Period": "Early Angkor Period", 
+                "Number of Samples": "5"
+              },
+              "geometry": {
+                "type": "Point",
+                "coordinates": [
+                  103.304036,
+                  13.120227
+                ]
+              },
+              "id": 28
+            }
+          ]
+        }         
+    // adding Prasat Baset as a point to the map, making it able to be styled differently from the trenches
+     var temple = {
+        "type": "FeatureCollection",
+          "features": [
+            {
+              "type": "Feature",
+              "properties": {
+                "Name": "Prasat Baset",
+                "Dating": "1018 CE by Suryavaman I"
+              },
+              "geometry": {
+                "type": "Point",
+                "coordinates": [
+                  103.30387508897817,
+                  13.116748967790759
+                ]
+              },
+              "id": 1
+            }
+          ]
+        }
+
+    // Set bounds to area of reserach (Prasat Baset) 
+		var bounds = [
+		    [103.29208156830148, 13.112394384258002], // Southwest coordinates 
+		    [103.31526874273953, 13.124097053696671] // Northeast coordinates   
+		];
+
+		var map = new mapboxgl.Map({
+			container: 'map',
+			style: 'mapbox://styles/mapbox/outdoors-v11',
+			center: [103.30833340594079, 13.11759733306607],   
+			zoom: 10,
+			minZoom: 1, // pick your own
+			maxBounds: bounds // Sets bounds from variable above
+		});
+    // Map's On 'load' function.
+    map.on('load', function () {
+      var filterGroup = document.getElementById('filter-group');
+      // adding the locations of the trenches to the map on load function
+      map.addSource('places', {
+        type: 'geojson',
+        data: places
+        });
+      // adding the temple point to the map from the GEOJSON to the map on load function
+        map.addSource('temple', {
+          type: 'geojson',
+          data: temple
+        });
+      var toggleButton = document.getElementById('toggle-sidebar');
+      var sidebar = document.getElementById('sidebar');
+
+      toggleButton.addEventListener('click', () => {
+        if (sidebar.style.display === 'none' || sidebar.style.display === '') {
+          sidebar.style.display = 'block';
+          toggleButton.style.display = 'none'; // hiding the button after it is clicked
+        } else {
+          sidebar.style.display = 'none';
+          toggleButton.style.display = 'block'; // can show the button again if it is needed
+        }
+      });
+    // close button on the content panel
+    var closeButton = document.getElementById('close-sidebar');
+    closeButton.addEventListener('click', () => {
+      sidebar.style.display = 'none';
+      toggleButton.style.display = 'block'; // Show the toggle button again
+    });
+
+    // Create one layer per class (so I can filter by class later)
+      const classSet = new Set();
+      places.features.forEach(f => {
+        const cerClasses = f.properties.CerClass || f.properties.Class || [];
+        cerClasses.forEach(c => classSet.add(c));
+      });
+      const uniqueClass = [...classSet].sort((a, b) => a - b);
+
+// image loads first, then make layers
+        uniqueClass.forEach((CerClass, index) => {
+          const layerID = `CerClass-${index}`;
+
+          if (!map.getLayer(layerID)) {
+            map.addLayer({
+              'id': layerID,
+              'type': 'symbol',
+              'source': 'places',
+              'layout': {
+                'icon-image': 'marker-15',
+                'icon-allow-overlap': true,
+                'icon-size': 2.5, 
+              },
+              filter: ['in', CerClass, ['get', 'CerClass']]
+            });
+      
+      // making class names and images so I can call this variable in the next block of code 
+        var classNames = {
+          1: { text: "Class 1: Restricted", img: "Class1.png" },
+          2: { text: "Class 2: Unrestricted", img: "Class2.png" },
+          3: { text: "Class 3: Simple", img: "Class3.png" },
+          4: { text: "Class 4: Restricted Everted Carinated", img: "Class4.png" },
+          5: { text: "Class 5: Everted with Lip", img: "Class5.png" },
+          6: { text: "Class 6: Concave", img: "Class6.png" }
+        };
+      // adding ceramic class names and making a checkbox  
+        var info = classNames[CerClass];
+        var input = document.createElement('input');
+        input.type = 'checkbox';
+        input.id = layerID;
+        input.checked = true;
+        filterGroup.appendChild(input);
+
+        var label = document.createElement('label');
+        label.setAttribute('for', layerID);
+        label.textContent = info?.text || `Class ${CerClass}`;
+        filterGroup.appendChild(label);
+
+      // code to add image to the checkboxes, thought it looked too busy 
+      // code is commented out right now
+        //if (info.img) {
+         //const img = document.createElement('img');
+          //img.src = info.img;
+          //img.alt = `Image for ${info.text}`;
+          //img.className = 'checkboximage';
+          //filterGroup.appendChild(img);
+          //label.appendChild(img);
+        //}
+//
+        // what happens when the box is checked or not 
+        input.addEventListener('change', function (e) {
+          map.setLayoutProperty(
+            layerID,
+            'visibility',
+            e.target.checked ? 'visible' : 'none'
+          );
+        });
+        
+        // popup code for the trench points
+        map.on('click', layerID, function (e) {
+          var coordinates = e.features[0].geometry.coordinates.slice();
+          var description = "<b>Name:</b> " +
+            e.features[0].properties.name +
+            "<br><b>Mound Name:</b> " +
+            e.features[0].properties["Mound Name"] +
+            "<br><b> Classes Present:</b> " +
+            e.features[0].properties["CerClass"].replace("[", "").replace("]", "") +
+            "<br><b> Number of Samples:</b> " +
+            e.features[0].properties["Number of Samples"] +
+            "<br><b>Primary Time Period Present:</b> " +
+            e.features[0].properties["Primary Time Period"];
+
+          new mapboxgl.Popup()
+            .setLngLat(coordinates)
+            .setHTML(`<div class="PopupText">${description}</div>`)
+            .addTo(map);
+        });
+        // changing the mouse over hover on trench points 
+        map.on('mouseenter', layerID, function () {
+          map.getCanvas().style.cursor = 'pointer';
+        });
+
+        map.on('mouseleave', layerID, function () {
+          map.getCanvas().style.cursor = 'grab';
+        });
+      } 
+    });
+
+      // adding layer for temple point from GEOJSON data
+        var layerID2 = 'temple-symbol-layer'
+        if (!map.getLayer(layerID2)) {
+          map.addLayer({
+            'id': layerID2,
+            'type': 'symbol',
+            'source': 'temple',
+            'layout': {
+              'icon-image': 'town-hall-15',
+              'icon-allow-overlap': true, 
+              'icon-size': 1.5,
+            }
+          });
+        }
+      // pop up code for when user clicks on the temple point
+      map.on('click', layerID2, function (e) {
+      var coordinates = e.features[0].geometry.coordinates.slice();
+      var description = "<b>Temple:</b> " +
+        e.features[0].properties.Name +
+        "<br><b>Dating:</b> " +
+        e.features[0].properties.Dating +
+        '<img class="templeImage" alt="Photo of a sandstone temple" src="Temple.png">';
+
+      new mapboxgl.Popup()
+        .setLngLat(coordinates)
+        .setHTML(`<div class="PopupText">${description}</div>`)
+        .addTo(map);
+    });
+    // changing the mouse when over the temple point
+    map.on('mouseenter', layerID2, function () {
+      map.getCanvas().style.cursor = 'pointer';
+    });
+    map.on('mouseleave', layerID2, function () {
+      map.getCanvas().style.cursor = 'grab';
+    });
+
+    // closing the sidebar 
+    var closeButton = document.getElementById('close-sidebar');
+    closeButton.addEventListener('click', () => {
+      sidebar.style.display = 'none';
+      toggleButton.style.display = 'block';
+    });
+
+    // having the relevant text appear on click and when it should go away  
+    var buttons = document.querySelectorAll('.sidebar_buttons');
+    buttons.forEach(button => {
+      button.addEventListener('click', () => {
+        const id = button.id + 'txt';
+        const txt = document.getElementById(id);
+        if (txt) {
+          txt.style.display = txt.style.display === 'block' ? 'none' : 'block';
+        }
+      });
+    });
+
+  }); 
+</script>
+
+</body>
+</html>
