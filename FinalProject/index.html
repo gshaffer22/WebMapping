@@ -193,12 +193,13 @@
 <div>
   <p class = "infotitle"> Preliminary Earthenware Ceramic Typology at Prasat Baset, in NW Cambodia </p>
 </div>
+<!-- byline div -->
 <div>
 <p class = "byline"> By: Gabby Shaffer</p>
 </div>
 <div><button id="toggle-sidebar" class="openbutton">Read more about it here!</button> 
 </div>
-  <!-- div for info box on side, with buttons and long text that will appear and disappear on click --> 
+<!-- div for info box on side, with buttons and long text that will appear and disappear on click --> 
 <div id="sidebar" class="sidebar">
   <h2 class=content>Content</h2>
   <button id="close-sidebar" class="content-close-button" aria-label="Close sidebar">×</button>
@@ -523,7 +524,7 @@
       });
       const uniqueClass = [...classSet].sort((a, b) => a - b);
 
-// making class names and images so I can call this variable in the next block of code 
+    // making class names and images so I can call this variable in the next block of code 
         var classNames = {
           1: { text: "Class 1: Restricted", img: "Class1.png" },
           2: { text: "Class 2: Unrestricted", img: "Class2.png" },
@@ -533,9 +534,7 @@
           6: { text: "Class 6: Concave", img: "Class6.png" }
         };
 
-
 // getting the image for the trench icons in javascript 
-      
     map.loadImage('https://img.icons8.com/external-tanah-basah-glyph-tanah-basah/100/FFFFFF/external-trowel-farming-tanah-basah-glyph-tanah-basah.png', function (error, image) {
       if (error) {
         console.error("Failed to load icon image:", error);
@@ -545,6 +544,8 @@
         map.addImage('custom-icon', image);
       }
 // citation for the image:<a target="_blank" href="https://icons8.com/icon/qsw1Y2lVJ1mv/trowel">trowel</a> icon by <a target="_blank" href="https://icons8.com">Icons8</a>
+
+// making the layer for the trenches 
       uniqueClass.forEach((CerClass, index) => {
         const layerID = `CerClass-${index}`;
 
@@ -574,18 +575,7 @@
         label.textContent = info?.text || `Class ${CerClass}`;
         filterGroup.appendChild(label);
 
-      // code to add image to the checkboxes, thought it looked too busy 
-      // code is commented out right now
-        //if (info.img) {
-         //const img = document.createElement('img');
-          //img.src = info.img;
-          //img.alt = `Image for ${info.text}`;
-          //img.className = 'checkboximage';
-          //filterGroup.appendChild(img);
-          //label.appendChild(img);
-        //}
-//
-        // what happens when the box is checked or not 
+      // what happens when the box is checked or not 
         input.addEventListener('change', function (e) {
           map.setLayoutProperty(
             layerID,
@@ -594,7 +584,7 @@
           );
         });
         
-        // popup code for the trench points
+      // popup code for the trench points
         map.on('click', layerID, function (e) {
           var coordinates = e.features[0].geometry.coordinates.slice();
           var description = "<b>Name:</b> " +
@@ -613,7 +603,7 @@
             .setHTML(`<div class="PopupText">${description}</div>`)
             .addTo(map);
         });
-        // changing the mouse over hover on trench points 
+      // changing the mouse over hover on trench points 
         map.on('mouseenter', layerID, function () {
           map.getCanvas().style.cursor = 'pointer';
         });
@@ -625,18 +615,18 @@
     });
   
 // code now starts here to intialize the temple layer starting with defining layerID2 
-const layerID2 = 'temple-symbol-layer';
+    const layerID2 = 'temple-symbol-layer';
 
 // getting the image for the temple icon in javascript 
-map.loadImage('https://img.icons8.com/deco-glyph/100/FFFFFF/museum.png', function (error, image) {
-  if (error) {
-    console.error("Failed to load temple icon image:", error);
-    return;
-  }
+    map.loadImage('https://img.icons8.com/deco-glyph/100/FFFFFF/museum.png', function (error, image) {
+      if (error) {
+        console.error("Failed to load temple icon image:", error);
+        return;
+      }
 
-  if (!map.hasImage('temple-icon')) {
-    map.addImage('temple-icon', image);
-  }
+      if (!map.hasImage('temple-icon')) {
+        map.addImage('temple-icon', image);
+      }
   // citation for this image: <a target="_blank" href="https://icons8.com/icon/fYkxyNl4P2gF/museum">Museum</a> icon by <a target="_blank" href="https://icons8.com">Icons8</a>
 
   // adding the temple symbol layer
@@ -652,50 +642,51 @@ map.loadImage('https://img.icons8.com/deco-glyph/100/FFFFFF/museum.png', functio
         }
       });
 
-    // temple layer added- this is the popup that will appear on click 
-        map.on('click', layerID2, function (e) {
-          const coordinates = e.features[0].geometry.coordinates.slice();
-          const description = "<b>Temple:</b> " +
-            e.features[0].properties.Name +
-            "<br><b>Dating:</b> " +
-            e.features[0].properties.Dating +
-            '<img class="templeImage" alt="Photo of a sandstone temple" src="Temple.png">';
+  // temple layer added- this is the popup that will appear on click 
+      map.on('click', layerID2, function (e) {
+        const coordinates = e.features[0].geometry.coordinates.slice();
+        const description = "<b>Temple:</b> " +
+          e.features[0].properties.Name +
+          "<br><b>Dating:</b> " +
+          e.features[0].properties.Dating +
+          '<img class="templeImage" alt="Photo of a sandstone temple" src="Temple.png">';
 
-          new mapboxgl.Popup()
-            .setLngLat(coordinates)
-            .setHTML(`<div class="PopupText">${description}</div>`)
-            .addTo(map);
+        new mapboxgl.Popup()
+          .setLngLat(coordinates)
+          .setHTML(`<div class="PopupText">${description}</div>`)
+          .addTo(map);
+      });
+
+  // mouse on hover vs. not over the temple point (pointer to grab )
+        map.on('mouseenter', layerID2, function () {
+          map.getCanvas().style.cursor = 'pointer';
         });
 
-    map.on('mouseenter', layerID2, function () {
-      map.getCanvas().style.cursor = 'pointer';
+        map.on('mouseleave', layerID2, function () {
+          map.getCanvas().style.cursor = 'grab';
+        });
+      }
     });
 
-    map.on('mouseleave', layerID2, function () {
-      map.getCanvas().style.cursor = 'grab';
-    });
-  }
-});
-
-    // closing the sidebar 
-    var closeButton = document.getElementById('close-sidebar');
-    closeButton.addEventListener('click', () => {
-      sidebar.style.display = 'none';
-      toggleButton.style.display = 'block';
-    });
-  
-    // having the relevant text appear on click and when it should go away  
-    var buttons = document.querySelectorAll('.sidebar_buttons');
-    buttons.forEach(button => {
-      button.addEventListener('click', () => {
-        const id = button.id + 'txt';
-        const txt = document.getElementById(id);
-        if (txt) {
-          txt.style.display = txt.style.display === 'block' ? 'none' : 'block';
-        }
+  // closing the sidebar 
+      var closeButton = document.getElementById('close-sidebar');
+      closeButton.addEventListener('click', () => {
+        sidebar.style.display = 'none';
+        toggleButton.style.display = 'block';
       });
-    });
-  }); 
+  
+  // having the relevant text appear on click in the sidebar and when it should go away, from HTML code section  
+      var buttons = document.querySelectorAll('.sidebar_buttons');
+      buttons.forEach(button => {
+        button.addEventListener('click', () => {
+          const id = button.id + 'txt';
+          const txt = document.getElementById(id);
+          if (txt) {
+            txt.style.display = txt.style.display === 'block' ? 'none' : 'block';
+          }
+        });
+      });
+    }); 
 </script>
 
 </body>
